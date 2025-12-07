@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="format-detection" content="telephone=no">
+      <title>Vòng quay lì xì</title>
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Francois+One&amp;display=swap'>
+      <link rel='stylesheet' href='css/sweetalert.css'>
+      <link rel='stylesheet' href='css/custom.css'>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+      <script type="text/javascript" src="js/Winwheel.min.js"></script>
+      <script src='js/sweetalert-dev.js'></script>
+      <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+      <style>
+         /* Tối ưu thêm cho canvas trên iOS */
+         #canvas {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+         }
+      </style>
+   </head>
+<div class="pyro">
+  <div class="before" style="z-index: 9999"></div>
+  <div class="after"></div>
+</div>
+   <body onload="">
+      <div class="new-year-container">
+         
+
+         <div class="banner top-banner">
+            CHÚC MỪNG
+         </div>
+
+         <div class="year-display">
+            <span class="year-part1">20</span><span class="year-part2">26</span>
+         </div>
+
+         <div class="banner bottom-banner">
+            VÒNG QUAY LÌ XÌ
+         </div>
+      </div>
+
+      <div id="caidat">
+      <img id="popup"src="img/popup.jpg"/>
+      <div class="sotiendalixi" id="sotiendalixi"></div>
+      <div class="lichsulixi" id="lichsulixi"></div>
+      <div class="buttontatpopup" onClick="tatpopup()" ></div>
+      <div class="buttonlammoi" id="lammoi" onClick="lammoi()"></div>
+      <div class="nenpopup"></div>
+      </div>
+
+      <div id="popupnhantien">
+      <img id="popuptien"src="img/popupnhantien.png"/>
+      <div class="sotienpopupnhantien" id="sotienpopupnhantien"><img id="xuatsotienpopup"></img></div>
+      <div class="lammoipopupnhantien" id="lammoi" onClick="lammoi()"></div>
+      <div class="nenpopup"></div>
+      </div>
+
+      <div class="vongquay">
+         <canvas id="canvas" width="450" height="450" data-responsiveMinWidth="180" data-responsiveScaleHeight="true" data-responsiveMargin="50" style="touch-action: none;">
+         </canvas>
+         <div id="batdauquay" class="nutbatdau"></div>
+         <div onClick="startSpin();" class="nutquay" style="touch-action: manipulation;"></div>
+      </div>
+
+      <img class="responsive2" style="position:fixed;z-index:99;top:0px;right:0px" src="img/hea1.png"/>
+      <div style="position:fixed;z-index:99;bottom:-50px;left:0;width:100%;height:500px;background:url(img/bot1.png) repeat-x bottom left;pointer-events:none;"></div>
+      
+      <div class="nutcaidat" style="position:fixed;bottom:0px;left:20px" onClick="mopopup()"></div>
+      <input type="range" id="manhornhe" style="position:fixed;bottom:2px;right:20px;z-index: 999" onchange="laypower()" min="3" step="0.1" max="15" value="8">
+
+      <img style="position:fixed;z-index:99;top:2px;left:1px" src="img/banglixi.png"/>
+      <div id="annhantien" style="display: none;">
+      <img class="buttonnhantien" style="position:fixed;z-index:99;top:153px;left:1px;cursor: pointer;" src="img/nhantien.png" onclick="nhantien()" />
+      <img style="position:fixed;z-index:99;top:183px;left:24px;" src="img/muiten.gif"/>
+      </div>
+
+      <div style="position:fixed;z-index:999;top:37px;left:40px;text-shadow: 2px 2px 5px #f7ff29;color: #f2f4be;" id="xuatluotquay"></div>
+
+      <img style="position:fixed;z-index:999;top:105px;left:9px" id="xuatsotien"></img>
+
+      <audio id="votay"><source src="sound/votay.mp3" type="audio/mpeg"></audio>
+      <audio id="matluot"><source src="sound/matluot.mp3" type="audio/mpeg"></audio>
+      <audio id="dangquay"><source src="sound/dangquay.mp3" type="audio/mpeg"></audio>
+
+   </body>
+   <script>
+    var matkhau = "mycode";
+    var solanquay = 5;
+      // Sau khi load trang sẽ yêu cầu nhập mật khẩu
+      // function nhappass() {
+      //             swal({
+      //             title: "Vòng quay bị khoá!",
+      //             text: "Nhập mật khẩu để mở khoá vòng quay:",
+      //             type: "input",
+      //             showCancelButton: false, // Có hiển thị nút cancel không(true = có)
+      //             closeOnConfirm: false, // Có thể tắt popup khi nhấp Ok không (true = có)
+      //             showLoaderOnConfirm: true, // Hiển thị loading khi nhấp vào nút Ok
+      //             animation: "slide-from-top", // Như tên của nó, popup sẽ slide from top
+      //             inputPlaceholder: "Nhập mật khẩu..."
+      //         },
+      //         function(inputValue) {
+      //             if (inputValue === false) return false;
+
+      //             if (inputValue !== matkhau) {
+      //                 setTimeout(function() {
+      //                     swal.showInputError("Mật khẩu sai, vui lòng nhập lại!");
+      //                 }, 2000);
+      //                 return false
+      //             }
+      //             setTimeout(function() {
+      //                 swal("Mở khoá thành công!", "Hãy đưa chiếc điện thoại cho người muốn nhận lì xì nào!", "success");
+      //             }, 2000);
+      //         });
+      // }
+      function mopopup() {
+        document.getElementById("caidat").style.display = "block";
+      }
+
+      function tatpopup() {
+        document.getElementById("caidat").style.display = "none";
+      }
+
+      $( ".buttontatpopup" ).hover(
+        function() {
+          $("#popup").attr("src",'img/popup2.jpg');
+        }, function() {
+          $("#popup").attr("src",'img/popup.jpg');
+        }
+      );
+      $( ".buttonlammoi" ).hover(
+        function() {
+          $("#popup").attr("src",'img/popup1.png');
+        }, function() {
+          $("#popup").attr("src",'img/popup.jpg');
+        }
+      );
+      $( ".buttonnhantien" ).hover(
+        function() {
+          $(".buttonnhantien").attr("src",'img/nhantienhover.png');
+        }, function() {
+          $(".buttonnhantien").attr("src",'img/nhantien.png');
+        }
+      );
+      $( ".lammoipopupnhantien" ).hover(
+        function() {
+          $("#popuptien").attr("src",'img/popupnhantienhover.png');
+        }, function() {
+          $("#popuptien").attr("src",'img/popupnhantien.png');
+        }
+      );
+      // Tối ưu GSAP cho iOS - Tắt lag smoothing để animation mượt hơn
+      gsap.ticker.lagSmoothing(0);
+      
+      // ====== CẤU HÌNH XÁC SUẤT ẨN ======
+      // Xác suất thực tế của từng mệnh giá (tổng phải = 100)
+      // ⚠️ QUAN TRỌNG: index phải khớp với thứ tự trong theWheel.segments array
+      // Pattern xen kẽ: Lớn (đỏ) - Nhỏ (vàng) - Lớn (đỏ) - Nhỏ (vàng)...
+      const prizeConfig = [
+          { text: '500.000 VNĐ', probability: 0, index: 0 },    // Index 0 - Lớn (đỏ) - DISABLED
+          { text: '50.000 VNĐ', probability: 15, index: 1 },    // Index 1 - Nhỏ (vàng)
+          { text: '200.000 VNĐ', probability: 0, index: 2 },   // Index 2 - Lớn (đỏ)
+          { text: '20.000 VNĐ', probability: 50, index: 3 },    // Index 3 - Nhỏ (vàng)
+          { text: '100.000 VNĐ', probability: 0, index: 4 },   // Index 4 - Lớn (đỏ)
+          { text: '10.000 VNĐ', probability: 35, index: 5 }     // Index 5 - Nhỏ (vàng)
+      ];
+      
+      // Hàm chọn segment dựa trên xác suất
+      function getRandomSegmentByProbability() {
+          const random = Math.random() * 100; // 0-100
+          let cumulative = 0;
+          
+          // Lọc ra các segment có xác suất > 0
+          const validPrizes = prizeConfig.filter(p => p.probability > 0);
+          
+          for (let i = 0; i < validPrizes.length; i++) {
+              cumulative += validPrizes[i].probability;
+              if (random <= cumulative) {
+                  const prize = validPrizes[i];
+                  console.log('Random:', random.toFixed(2), '→ Trúng:', prize.text, '| Index:', prize.index);
+                  return prize.index; // ✅ Trả về index thay vì segment
+              }
+          }
+          
+          // Fallback: trả về index đầu tiên có xác suất > 0
+          console.log('Fallback to first valid prize');
+          return validPrizes[0].index;
+      }
+      
+      // ====== THIẾT LẬP VÒNG QUAY (Các ô đều nhau) ======
+      // Pattern xen kẽ: Lớn (đỏ) - Nhỏ (vàng) - Lớn (đỏ) - Nhỏ (vàng)...
+      let theWheel = new Winwheel({
+          'outerRadius': 220, // Bán kính ngoài
+          'innerRadius': 0, // Size lỗ trung tâm
+          'textFontSize': 20, // Size chữ đồng nhất
+          'textOrientation': 'horizontal', // Chữ nằm ngang
+          'textAlignment': 'outer', // Căn chỉnh văn bản ra bên ngoài bánh xe.
+          'numSegments': 6, // Số ô
+          'responsive': true,
+          'segments': [{
+              'fillStyle': '#910f06', // Đỏ - Lớn
+              'text': '500.000 VNĐ',
+              'textFillStyle': '#ffffff'
+          }, {
+              'fillStyle': '#ab6f03', // Vàng - Nhỏ
+              'text': '50.000 VNĐ',
+              'textFillStyle': '#ffffff'
+          }, {
+              'fillStyle': '#910f06', // Đỏ - Lớn
+              'text': '200.000 VNĐ',
+              'textFillStyle': '#ffffff'
+          }, {
+              'fillStyle': '#ab6f03', // Vàng - Nhỏ
+              'text': '20.000 VNĐ',
+              'textFillStyle': '#ffffff'
+          }, {
+              'fillStyle': '#910f06', // Đỏ - Lớn
+              'text': '100.000 VNĐ',
+              'textFillStyle': '#ffffff'
+          }, {
+              'fillStyle': '#ab6f03', // Vàng - Nhỏ
+              'text': '10.000 VNĐ',
+              'textFillStyle': '#ffffff'
+          }],
+          'animation': // Chỉ định hình động để sử dụng.
+          {
+              'type': 'spinToStop',
+              'duration': 5, // Duration mặc định, sẽ điều chỉnh theo device
+              'spins': 8, // Số vòng mặc định, sẽ điều chỉnh theo device
+              'callbackFinished': alertPrize,
+              'callbackSound': playSound, // Chức năng gọi khi âm thanh đánh dấu được kích hoạt.
+              'soundTrigger': 'pin', // Chỉ định các chân là để kích hoạt âm thanh, tùy chọn khác là 'phân đoạn'.
+              'easing': 'power3.out', // Sử dụng power3 thay vì power4 cho mượt hơn trên mobile
+          },
+          'pins': {
+              'number': 6, // Số lượng chân. Họ không gian đều xung quanh bánh xe.
+              'responsive': true,
+              'fillStyle': 'silver',
+              'outerRadius': 4,
+          }
+      });
+
+      // Tối ưu canvas context cho iOS
+      const canvas = document.getElementById('canvas');
+      if (canvas && canvas.getContext) {
+          const ctx = canvas.getContext('2d', { 
+              alpha: false, // Tắt alpha channel nếu không cần
+              desynchronized: true // Tối ưu rendering trên iOS
+          });
+      }
+
+      // Vars được sử dụng bởi mã trong trang này để thực hiện các điều khiển nguồn.
+      let wheelPower = 8;
+      let wheelSpinning = false;
+      let selectedPrizeText = ''; // ✅ Lưu kết quả được chọn theo xác suất
+      // ---------------------------------------------------------------------
+      // Tải âm thanh đánh dấu và chức năng phát được gọi khi pin đi qua con trỏ.
+      let audio = new Audio('sound/tick.mp3'); // Tạo đối tượng âm thanh và tải tập tin tick.mp3.
+
+      var dem = 0;
+      var demnhantien = 0; // Đếm số lần click vào nút nhận tiền
+      var lichsulixi = "";
+      var tongtienlixi = 0;
+      var tiendalixi;
+      document.getElementById("xuatluotquay").innerHTML = dem; // ✅ Hiển thị số lần đã quay (ban đầu = 0)
+      var votay = document.getElementById("votay");
+      var matluot = document.getElementById("matluot");
+      var dangquay = document.getElementById("dangquay");
+      
+      // Phát hiện mobile để tối ưu âm thanh
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      function playSound() {
+          // Trên mobile, giảm tần suất phát âm thanh tick để tránh lag
+          if (isMobileDevice) {
+              // Chỉ phát âm thanh tick mỗi 2 lần để giảm tải
+              if (Math.random() > 0.5) return;
+          }
+          
+          // Dừng và tua lại âm thanh nếu nó đã phát.
+          audio.pause();
+          audio.currentTime = 0;
+
+          // Phát âm thanh.
+          audio.play().catch(e => {
+              // Bỏ qua lỗi nếu không thể phát âm thanh
+              console.log('Audio play failed:', e);
+          });
+      }
+
+      // -------------------------------------------------------
+      // Xử lý thanh range
+      // -------------------------------------------------------
+      function laypower() {
+          wheelPower = document.getElementById("manhornhe").value; // Lấy dữ liệu thanh range
+      }
+
+      // -------------------------------------------------------
+      // Sau khi nhấp vào nút quay
+      // -------------------------------------------------------
+      function startSpin() {
+          // Nút quay không nhấp được khi đang chạy
+          if (wheelSpinning == false) {
+              // Phát hiện mobile để tối ưu animation
+              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              
+              // ====== SỬ DỤNG XÁC SUẤT ẨN ======
+              // Chọn segment dựa trên xác suất đã cấu hình
+              const wheelIndex = getRandomSegmentByProbability(); // Trả về 0-5
+              
+              // ✅ Lưu kết quả vào biến global để dùng trong alertPrize
+              selectedPrizeText = prizeConfig[wheelIndex].text;
+              console.log('Selected prize:', selectedPrizeText);
+              
+              // ✅ Winwheel.segments là 1-indexed (segments[1] đến segments[6])
+              // Cần convert: index 0 → segment 1, index 1 → segment 2, ...
+              const segmentNumber = wheelIndex + 1;
+              console.log('Wheel will stop at segment:', segmentNumber, '(array index:', wheelIndex, ')');
+              
+              // Dựa trên mức công suất được chọn, hãy điều chỉnh số vòng quay cho bánh xe
+              if (isMobile) {
+                  // Trên mobile: Tăng số vòng quay và thời gian
+                  const spinsCount = Math.max(Math.min(wheelPower * 1.1, 12), 8); // Từ 8-12 vòng
+                  theWheel.animation.spins = spinsCount;
+                  theWheel.animation.duration = spinsCount * 0.7; // ~0.7s mỗi vòng = mượt
+              } else {
+                  // Desktop: Tăng lên 10-15 vòng
+                  const spinsCount = Math.max(Math.min(wheelPower * 1.3, 15), 10);
+                  theWheel.animation.spins = spinsCount;
+                  theWheel.animation.duration = spinsCount * 0.65;
+              }
+
+              // Tắt nút xoay để không thể nhấp lại trong khi bánh xe đang quay.
+              // $(".nutbatdau").css("background-image", "url(img/controtat.png)");
+
+              // ✅ SOLUTION: Tự làm animation bằng GSAP thay vì dùng Winwheel animation
+              // Vì Winwheel's stopAngle calculation không rõ ràng
+              
+              const segment = theWheel.segments[segmentNumber];
+              
+              // Mapping: góc cuối cùng để indicate segment mong muốn
+              const indicatedAngleRanges = {
+                  1: {min: 300, max: 359},  // 500.000 VNĐ
+                  2: {min: 240, max: 299},  // 50.000 VNĐ
+                  3: {min: 180, max: 239},  // 200.000 VNĐ
+                  4: {min: 120, max: 179},  // 20.000 VNĐ
+                  5: {min: 60, max: 119},   // 100.000 VNĐ
+                  6: {min: 1, max: 59}      // 10.000 VNĐ
+              };
+              
+              const range = indicatedAngleRanges[segmentNumber];
+              
+              // Chọn góc cuối cùng ngẫu nhiên trong range
+              let targetFinalAngle;
+              if (segmentNumber === 1 && Math.random() > 0.5) {
+                  targetFinalAngle = Math.random() > 0.5 ? 0 : (range.min + Math.random() * (range.max - range.min));
+              } else {
+                  targetFinalAngle = range.min + Math.random() * (range.max - range.min);
+              }
+              
+              // ⚠️ FIX: Tính số vòng quay NGUYÊN, không dùng số thập phân
+              const baseSpins = isMobile ? 10 : 12;
+              const numSpins = baseSpins + Math.floor(Math.random() * 3); // 10-12 hoặc 12-14 vòng
+              const totalRotation = numSpins * 360 + targetFinalAngle;
+              const duration = isMobile ? numSpins * 0.6 : numSpins * 0.55;
+              
+              console.log(`🎯 Target: ${segment.text} (Seg ${segmentNumber}) | Final angle: ${targetFinalAngle.toFixed(2)}° | Total: ${totalRotation.toFixed(2)}° (${numSpins} spins) | Check: ${totalRotation % 360}`);
+              
+              // Animate bằng GSAP trực tiếp
+              wheelSpinning = true;
+              dangquay.play();
+              
+              gsap.to(theWheel, {
+                  rotationAngle: totalRotation,
+                  duration: duration,
+                  ease: "power3.out",
+                  onUpdate: function() {
+                      theWheel.draw();
+                  },
+                  onComplete: function() {
+                      // Gọi alertPrize với segment đúng
+                      alertPrize(theWheel.getIndicatedSegment());
+                  }
+              });
+
+              // Đặt thành true để không thể thay đổi nguồn và bật nút quay lại trong khi
+              // hình ảnh động hiện tại. Người dùng sẽ phải thiết lập lại trước khi quay lại.
+              wheelSpinning = true;
+          }
+          // if (dem < solanquay) {
+          dangquay.play();
+          // }
+      }
+
+      // -------------------------------------------------------
+      // Sau khi nhấp vào nút làm mới
+      // -------------------------------------------------------
+      // function lammoi() {
+      //     swal({
+      //             title: "Làm mới vòng quay!",
+      //             text: "Làm mới vòng quay sẽ xoá hết các vòng quay còn lại. \nLịch sử và tổng tiền lì xì vẫn giữ nguyên. \nChú ý nếu tải lại trang sẽ làm mất lịch sử và tổng tiền lì xì\nNhập mật khẩu để tiếp tục:",
+      //             type: "input",
+      //             showCancelButton: true, // Có hiển thị nút cancel không(true = có)
+      //             closeOnConfirm: false, // Có thể tắt popup khi nhấp Ok không (true = có)
+      //             showLoaderOnConfirm: true, // Hiển thị loading khi nhấp vào nút Ok
+      //             animation: "slide-from-top", // Như tên của nó, popup sẽ slide from top
+      //             inputPlaceholder: "Nhập mật khẩu..."
+      //         },
+      //         function(inputValue) {
+      //             if (inputValue === false) return false;
+
+      //             if (inputValue !== matkhau) {
+      //                 setTimeout(function() {
+      //                     swal.showInputError("Mật khẩu sai, vui lòng nhập lại!");
+      //                 }, 2000);
+      //                 return false
+      //             }
+      //             setTimeout(function() {
+      //                 swal("Làm mới thành công!", "Hãy đưa chiếc điện thoại cho người muốn nhận lì xì nào!", "success");
+
+      //                 document.getElementById("popupnhantien").style.display = "none"; // Tắt popup nhận tiền
+
+      //                 theWheel.stopAnimation(false); // Dừng hình động
+      //                 theWheel.rotationAngle = 0; // Đặt lại góc bánh xe về 0 độ.
+      //                 theWheel.draw(); // Gọi draw để hiển thị các thay đổi cho bánh xe.
+
+      //                 $(".nutbatdau").css("background-image", "url(img/contro.png)"); // Hiển thị lại nút Quay
+
+      //                 document.getElementById("xuatluotquay").innerHTML = solanquay;
+
+      //                 wheelSpinning = false; // Đặt lại thành false thành các nút nguồn và quay có thể được bấm lại.
+      //                 document.getElementById("annhantien").style.display = "none"; // Ẩn nút nhận tiền
+      //                 document.getElementById("xuatsotien").src =""; // Xoá ảnh tiền
+
+      //                 dem = 0;
+      //             }, 2000);
+      //         });
+      // }
+
+      // -------------------------------------------------------
+      // Sau khi vòng quay quay xong
+      // -------------------------------------------------------
+      function alertPrize(indicatedSegment) {
+          dem++; // ✅ Đếm số lần quay (tăng sau mỗi lần quay xong)
+          
+          // Delay để đảm bảo animation hoàn tất 100%
+          setTimeout(function() {
+              // Normalize góc về 0-360 (không thay đổi vị trí visual, chỉ đơn giản hoá số)
+              const currentAngle = theWheel.rotationAngle;
+              const normalizedAngle = currentAngle % 360;
+              theWheel.rotationAngle = normalizedAngle;
+              theWheel.draw();
+              
+              // Lấy kết quả thực tế từ vị trí wheel hiện tại
+              const actualIndicatedSegment = theWheel.getIndicatedSegment();
+              const actualPrize = actualIndicatedSegment.text;
+              
+              console.log('✅ Wheel stopped! Final angle:', normalizedAngle.toFixed(2), '| Prize:', actualPrize, '| Expected:', selectedPrizeText, '| Match:', actualPrize === selectedPrizeText ? '✅' : '❌');
+              
+              wheelSpinning = false;
+
+              $(".nutbatdau").css("background-image", "url(img/contro.png)"); // Hiển thị lại nút Quay
+              document.getElementById("xuatluotquay").innerHTML = dem; // ✅ Hiển thị SỐ LẦN ĐÃ QUAY
+
+
+              // if (indicatedSegment.text == 'Ô mất lượt') { // Nếu quay vào 0k
+              //     matluot.play(); // Bật nhạc fail
+
+              //     document.getElementById("annhantien").style.display = "none"; // Ẩn nút nhận tiền
+              //     document.getElementById("xuatsotien").src = ""; // Xoá ảnh tiền
+
+              //     swal("Rất tiếc!", "Bạn không nhận được đồng nào\nNhưng bạn còn lại " + (solanquay - dem) + " lần quay, cố gắng lên nào!", "error");
+              // } else { // Nếu không quay vào 0k
+              votay.play(); // Bật nhạc vỗ tay
+              
+              // Xuất ảnh tiền
+              document.getElementById("annhantien").style.display = ""; // Hiển thị nút nhận tiền
+              document.getElementById("xuatsotien").src = "img/" + actualPrize.replace(".000 VNĐ", "") + "k.jpg";
+              
+              // Hiển thị popup nhanh với timer ngắn
+              swal({
+                  title: "Tết ấm no!",
+                  text: "Bạn nhận được " + actualPrize,
+                  type: "success",
+                  timer: 1500,
+                  showConfirmButton: true
+              });
+              
+          }, 200); // Delay 200ms cho smooth transition
+      }
+
+      // -------------------------------------------------------
+      // Sau khi nhấp vào nút nhận tiền
+      // -------------------------------------------------------
+      // function nhantien() {
+      //   document.getElementById("annhantien").style.display = "none"; // Ẩn nút nhận tiền
+      //   document.getElementById("popupnhantien").style.display = "block"; // Mở popup
+      //   document.getElementById("xuatsotienpopup").src = "img/" + tiendalixi + "kk.jpg";
+      //   demnhantien++;
+      //   tongtienlixi += Number(tiendalixi);
+      //   document.getElementById("sotiendalixi").innerHTML = tongtienlixi + ".000 VNĐ";
+      //   lichsulixi += "Người " + demnhantien + " : " + tiendalixi + ".000 VNĐ<br/>";
+      //   document.getElementById("lichsulixi").innerHTML = lichsulixi;
+      // }
+
+   </script>
+</html>
