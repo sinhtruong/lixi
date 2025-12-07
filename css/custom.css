@@ -1,3 +1,14 @@
+/* Tối ưu cho iPhone - Hardware Acceleration */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
 .pyro > .before, .pyro > .after {
   position: absolute;
   width: 5px;
@@ -215,12 +226,33 @@
          background-size: cover;
          font-size: 30px;
          color:white;
+         /* Tối ưu smooth scrolling và touch cho iOS */
+         -webkit-overflow-scrolling: touch;
+         -webkit-font-smoothing: antialiased;
+         -moz-osx-font-smoothing: grayscale;
+         overscroll-behavior: none;
          }
          .vongquay {
          height: 100%;
          display: flex;
          justify-content: center;
          align-items: center;
+         /* Tối ưu rendering cho iOS */
+         -webkit-transform: translateZ(0);
+         transform: translateZ(0);
+         -webkit-backface-visibility: hidden;
+         backface-visibility: hidden;
+         -webkit-perspective: 1000;
+         perspective: 1000;
+         }
+         
+         /* Tối ưu canvas cho iPhone */
+         #canvas {
+         -webkit-transform: translateZ(0);
+         transform: translateZ(0);
+         -webkit-backface-visibility: hidden;
+         backface-visibility: hidden;
+         will-change: transform;
          }
          .nutbatdau{
          background-image: url('../img/contro.png');
@@ -228,6 +260,10 @@
          width:180px;
          height: 180px;
          z-index: 99;
+         /* Tối ưu cho iOS */
+         -webkit-transform: translateZ(0);
+         transform: translateZ(0);
+         -webkit-tap-highlight-color: transparent;
          }
          .nutcaidat{
          background-image: url('../img/caidat.png');
