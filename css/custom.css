@@ -216,7 +216,7 @@
          font-size: 30px;
          color:white;
          }
-         .vongquay, .topheader {
+         .vongquay {
          height: 100%;
          display: flex;
          justify-content: center;
@@ -353,4 +353,204 @@
     transform: translateX(-50%) translateY(-50%);
     -webkit-transform: translateX(-50%) translateY(330%);
     cursor: pointer;
+}
+
+/* === New Year Header Design === */
+.new-year-container {
+    position: relative;
+    width: 500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 100;
+    overflow: visible;
+    pointer-events: none;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+/* Background glow effect */
+.fireworks-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(ellipse at center, 
+        rgba(255, 215, 0, 0.3) 0%, 
+        rgba(255, 140, 0, 0.2) 50%, 
+        transparent 75%
+    );
+    border-radius: 50%;
+    z-index: 1;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Fireworks sparks effect */
+.fireworks-sparks {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: transparent;
+    z-index: 2;
+    box-shadow: 
+        0 -40px 0 2px #FFD700,
+        30px -30px 0 2px #FF6B6B,
+        40px 10px 0 2px #4ECDC4,
+        20px 40px 0 2px #FFE66D,
+        -20px 40px 0 2px #FF6B9D,
+        -40px 10px 0 2px #C7F0DB,
+        -30px -30px 0 2px #FFA07A,
+        -10px -45px 0 1px #98D8C8,
+        35px -10px 0 1px #F7B731,
+        -35px -10px 0 1px #FF7979;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Top banner - CHÚC MỪNG */
+.banner.top-banner {
+    position: relative;
+    top: 0;
+    padding: 8px 30px;
+    background: linear-gradient(to bottom, #FFE135 0%, #FFB800 100%);
+    color: #8B0000;
+    font-size: 22px;
+    font-weight: 900;
+    font-family: 'Francois One', Impact, sans-serif;
+    z-index: 15;
+    border-radius: 20px;
+    transform: rotate(-3deg);
+    box-shadow: 
+        0 4px 0 #D9A000,
+        0 6px 10px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+    margin-bottom: 10px;
+}
+
+/* Year display */
+.year-display {
+    position: relative;
+    z-index: 10;
+    margin: 5px auto;
+    display: flex;
+    line-height: 1;
+}
+
+.year-display span {
+    font-family: 'Francois One', Impact, 'Arial Black', sans-serif;
+    font-size: 110px;
+    font-weight: 900;
+    letter-spacing: -5px;
+    display: inline-block;
+}
+
+/* First part - 20 (Cyan/Blue) */
+.year-part1 {
+    color: #4dc2c4;
+    text-shadow: 
+        -4px -4px 0px #2a7a7c,
+        -6px -6px 0px #1a5a5c,
+        3px 3px 8px rgba(0,0,0,0.5),
+        0 0 20px rgba(77, 194, 196, 0.5);
+}
+
+/* Second part - 26 (Pink/Magenta) */
+.year-part2 {
+    color: #e55c7f;
+    text-shadow: 
+        -4px -4px 0px #a23a54,
+        -6px -6px 0px #7a2840,
+        3px 3px 8px rgba(0,0,0,0.5),
+        0 0 20px rgba(229, 92, 127, 0.5);
+}
+
+/* Bottom banner - VÒNG QUAY LÌ XÌ */
+.banner.bottom-banner {
+    position: relative;
+    bottom: 0;
+    padding: 12px 40px;
+    background: linear-gradient(to bottom, #FFE135 0%, #FFB800 100%);
+    color: #8B0000;
+    font-size: 26px;
+    font-weight: 900;
+    font-family: 'Francois One', Impact, sans-serif;
+    z-index: 15;
+    border-radius: 10px;
+    box-shadow: 
+        0 8px 0 #D9A000,
+        0 12px 15px rgba(0, 0, 0, 0.4);
+    text-shadow: 
+        2px 2px 0 rgba(255,255,255,0.6),
+        -1px -1px 0 rgba(139, 0, 0, 0.3);
+    letter-spacing: 2px;
+    margin-top: 10px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .new-year-container {
+        width: 400px;
+        height: auto;
+        min-height: 200px;
+    }
+    .year-display span {
+        font-size: 100px;
+    }
+    .banner.top-banner {
+        font-size: 18px;
+        padding: 6px 25px;
+    }
+    .banner.bottom-banner {
+        font-size: 26px;
+        padding: 10px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-year-container {
+        width: 320px;
+        height: auto;
+        min-height: 200px;
+    }
+    .year-display span {
+        font-size: 70px;
+        letter-spacing: -3px;
+    }
+    .year-part1 {
+        text-shadow: 
+            -3px -3px 0px #2a7a7c,
+            -4px -4px 0px #1a5a5c,
+            2px 2px 5px rgba(0,0,0,0.5);
+    }
+    .year-part2 {
+        text-shadow: 
+            -3px -3px 0px #a23a54,
+            -4px -4px 0px #7a2840,
+            2px 2px 5px rgba(0,0,0,0.5);
+    }
+    .banner.top-banner {
+        font-size: 14px;
+        padding: 5px 20px;
+    }
+    .banner.bottom-banner {
+        font-size: 20px;
+        padding: 8px 25px;
+        bottom: -20px;
+        letter-spacing: 1px;
+    }
 }
