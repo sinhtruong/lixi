@@ -363,26 +363,29 @@
               }
               
               // ⚠️ FIX: Tính số vòng quay NGUYÊN, không dùng số thập phân
-              const baseSpins = isMobile ? 10 : 12;
-              const numSpins = baseSpins + Math.floor(Math.random() * 3); // 10-12 hoặc 12-14 vòng
+              const baseSpins = isMobile ? 8 : 10;
+              const numSpins = baseSpins + Math.floor(Math.random() * 2); // 8-9 hoặc 10-11 vòng
               const totalRotation = numSpins * 360 + targetFinalAngle;
-              const duration = isMobile ? numSpins * 0.6 : numSpins * 0.55;
+              const duration = isMobile ? numSpins * 1.5 : numSpins * 1.3; // Tăng thời gian để khúc cuối chậm hơn
               
               console.log(`🎯 Target: ${segment.text} (Seg ${segmentNumber}) | Final angle: ${targetFinalAngle.toFixed(2)}° | Total: ${totalRotation.toFixed(2)}° (${numSpins} spins) | Check: ${totalRotation % 360}`);
               
-              // Animate bằng GSAP trực tiếp
+              // ✨ Animation mượt mà: Nhanh → Chậm dần đều, khúc cuối CỰC chậm
               wheelSpinning = true;
               dangquay.play();
               
+              // Dùng expo.out: 
+              // - Ban đầu nhanh
+              // - Chậm lại dần đều và mượt mà
+              // - Khúc cuối chậm lại RẤT MẠNH → hồi hộp tột độ!
               gsap.to(theWheel, {
                   rotationAngle: totalRotation,
                   duration: duration,
-                  ease: "power3.out",
+                  ease: "expo.out", // Khúc cuối chậm hơn nhiều so với circ.out
                   onUpdate: function() {
                       theWheel.draw();
                   },
                   onComplete: function() {
-                      // Gọi alertPrize với segment đúng
                       alertPrize(theWheel.getIndicatedSegment());
                   }
               });
