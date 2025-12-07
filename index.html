@@ -5,11 +5,11 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Vòng quay lì xì 2021</title>
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Francois+One&amp;display=swap'>
-      <link rel='stylesheet' href='lixi/css/sweetalert.css'>
-      <link rel='stylesheet' href='lixi/css/custom.css'>
-      <script type="text/javascript" src="lixi/js/Winwheel.min.js"></script>
-      <script type="text/javascript" src="lixi/js/TweenMax.min.js"></script>
-      <script src='lixi/js/sweetalert-dev.js'></script>
+      <link rel='stylesheet' href='css/sweetalert.css'>
+      <link rel='stylesheet' href='css/custom.css'>
+      <script type="text/javascript" src="js/Winwheel.min.js"></script>
+      <script type="text/javascript" src="js/TweenMax.min.js"></script>
+      <script src='js/sweetalert-dev.js'></script>
       <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
    </head>
 <div class="pyro">
@@ -18,11 +18,11 @@
 </div>
    <body onload="">
       <div class="topheader">
-         <img class="responsive" style="z-index:99;top:50px;" src="lixi/img/hea2.png"/>
+         <img class="responsive" style="z-index:99;top:50px;" src="img/hea2.png"/>
       </div>
 
       <div id="caidat">
-      <img id="popup"src="lixi/img/popup.jpg"/>
+      <img id="popup"src="img/popup.jpg"/>
       <div class="sotiendalixi" id="sotiendalixi"></div>
       <div class="lichsulixi" id="lichsulixi"></div>
       <div class="buttontatpopup" onClick="tatpopup()" ></div>
@@ -31,7 +31,7 @@
       </div>
 
       <div id="popupnhantien">
-      <img id="popuptien"src="lixi/img/popupnhantien.png"/>
+      <img id="popuptien"src="img/popupnhantien.png"/>
       <div class="sotienpopupnhantien" id="sotienpopupnhantien"><img id="xuatsotienpopup"></img></div>
       <div class="lammoipopupnhantien" id="lammoi" onClick="lammoi()"></div>
       <div class="nenpopup"></div>
@@ -44,25 +44,25 @@
          <div onClick="startSpin();" class="nutquay"></div>
       </div>
 
-      <img class="responsive2" style="position:fixed;z-index:99;top:0px;right:0px" src="lixi/img/hea1.png"/>
-      <div style="position:fixed;z-index:99;bottom:-50px;left:0;width:100%;height:500px;background:url(lixi/img/bot1.png) repeat-x bottom left;"></div>
-      <img class="responsive3" style="position:fixed;z-index:99;bottom:20px;left:20px" src="lixi/img/bot2.png"/>
+      <img class="responsive2" style="position:fixed;z-index:99;top:0px;right:0px" src="img/hea1.png"/>
+      <div style="position:fixed;z-index:99;bottom:-50px;left:0;width:100%;height:500px;background:url(img/bot1.png) repeat-x bottom left;"></div>
+      <img class="responsive3" style="position:fixed;z-index:99;bottom:20px;left:20px" src="img/bot2.png"/>
       <div class="nutcaidat" style="position:fixed;bottom:0px;left:20px" onClick="mopopup()"></div>
       <input type="range" id="manhornhe" style="position:fixed;bottom:2px;right:20px;z-index: 999" onchange="laypower()" min="20" step="0.01" max="60" value="40">
 
-      <img style="position:fixed;z-index:99;top:2px;left:1px" src="lixi/img/banglixi.png"/>
+      <img style="position:fixed;z-index:99;top:2px;left:1px" src="img/banglixi.png"/>
       <div id="annhantien" style="display: none;">
-      <img class="buttonnhantien" style="position:fixed;z-index:99;top:153px;left:1px;cursor: pointer;" src="lixi/img/nhantien.png" onclick="nhantien()" />
-      <img style="position:fixed;z-index:99;top:183px;left:24px;" src="lixi/img/muiten.gif"/>
+      <img class="buttonnhantien" style="position:fixed;z-index:99;top:153px;left:1px;cursor: pointer;" src="img/nhantien.png" onclick="nhantien()" />
+      <img style="position:fixed;z-index:99;top:183px;left:24px;" src="img/muiten.gif"/>
       </div>
 
       <div style="position:fixed;z-index:999;top:37px;left:40px;text-shadow: 2px 2px 5px #f7ff29;color: #f2f4be;" id="xuatluotquay"></div>
 
       <img style="position:fixed;z-index:999;top:105px;left:9px" id="xuatsotien"></img>
 
-      <audio id="votay"><source src="lixi/sound/votay.mp3" type="audio/mpeg"></audio>
-      <audio id="matluot"><source src="lixi/sound/matluot.mp3" type="audio/mpeg"></audio>
-      <audio id="dangquay"><source src="lixi/sound/dangquay.mp3" type="audio/mpeg"></audio>
+      <audio id="votay"><source src="sound/votay.mp3" type="audio/mpeg"></audio>
+      <audio id="matluot"><source src="sound/matluot.mp3" type="audio/mpeg"></audio>
+      <audio id="dangquay"><source src="sound/dangquay.mp3" type="audio/mpeg"></audio>
 
    </body>
    <script>
@@ -198,7 +198,7 @@
       let wheelSpinning = false;
       // ---------------------------------------------------------------------
       // Tải âm thanh đánh dấu và chức năng phát được gọi khi pin đi qua con trỏ.
-      let audio = new Audio('lixi/sound/tick.mp3'); // Tạo đối tượng âm thanh và tải tập tin tick.mp3.
+      let audio = new Audio('sound/tick.mp3'); // Tạo đối tượng âm thanh và tải tập tin tick.mp3.
 
       var dem = 0;
       var demnhantien = 0; // Đếm số lần click vào nút nhận tiền
@@ -237,7 +237,7 @@
               theWheel.animation.spins = wheelPower;
 
               // Tắt nút xoay để không thể nhấp lại trong khi bánh xe đang quay.
-              // $(".nutbatdau").css("background-image", "url(lixi/img/controtat.png)");
+              // $(".nutbatdau").css("background-image", "url(img/controtat.png)");
 
               // Bắt đầu quay bằng cách gọi startAnimation.
               theWheel.startAnimation();
@@ -308,7 +308,7 @@
           theWheel.draw(); // Gọi draw để hiển thị các thay đổi cho bánh xe.
           wheelSpinning = false; // Đặt lại thành false thành các nút nguồn và quay có thể được bấm lại.
 
-          $(".nutbatdau").css("background-image", "url(lixi/img/contro.png)"); // Hiển thị lại nút Quay
+          $(".nutbatdau").css("background-image", "url(img/contro.png)"); // Hiển thị lại nút Quay
           // document.getElementById("xuatluotquay").innerHTML = solanquay - dem; // Xuất kết quả
 
 
@@ -325,13 +325,13 @@
            // Xuất ảnh tiền
 
           document.getElementById("annhantien").style.display = ""; // Hiển thị nút nhận tiền
-          document.getElementById("xuatsotien").src = "lixi/img/" + indicatedSegment.text.replace(".000 VNĐ", "") + "k.jpg";
+          document.getElementById("xuatsotien").src = "img/" + indicatedSegment.text.replace(".000 VNĐ", "") + "k.jpg";
           swal("Tết ấm no!", "Bạn nhận được " + indicatedSegment.text, "success");
 
           // }
           // } else { // Nếu hết lượt quay(dem = solanquay)
           //     document.getElementById("xuatluotquay").innerHTML = "0";
-          //     $(".nutbatdau").css("background-image", "url(lixi/img/controhetluot.png)");
+          //     $(".nutbatdau").css("background-image", "url(img/controhetluot.png)");
 
           //     if (indicatedSegment.text == 'Ô mất lượt') {
           //         matluot.play(); // Bật nhạc fail
