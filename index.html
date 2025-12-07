@@ -305,6 +305,10 @@
       function startSpin() {
           // Nút quay không nhấp được khi đang chạy
           if (wheelSpinning == false) {
+              // ✨ Reset góc về 0 trước khi quay (để lần quay sau vẫn chính xác)
+              theWheel.rotationAngle = 0;
+              theWheel.draw();
+              
               // Phát hiện mobile để tối ưu animation
               const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
               
@@ -450,21 +454,13 @@
       function alertPrize(indicatedSegment) {
           dem++; // ✅ Đếm số lần quay (tăng sau mỗi lần quay xong)
           
-          // Delay để đảm bảo animation hoàn tất 100%
-          setTimeout(function() {
-              // Normalize góc về 0-360 (không thay đổi vị trí visual, chỉ đơn giản hoá số)
-              const currentAngle = theWheel.rotationAngle;
-              const normalizedAngle = currentAngle % 360;
-              theWheel.rotationAngle = normalizedAngle;
-              theWheel.draw();
-              
-              // Lấy kết quả thực tế từ vị trí wheel hiện tại
-              const actualIndicatedSegment = theWheel.getIndicatedSegment();
-              const actualPrize = actualIndicatedSegment.text;
-              
-              console.log('✅ Wheel stopped! Final angle:', normalizedAngle.toFixed(2), '| Prize:', actualPrize, '| Expected:', selectedPrizeText, '| Match:', actualPrize === selectedPrizeText ? '✅' : '❌');
-              
-              wheelSpinning = false;
+          // Lấy kết quả thực tế từ vị trí wheel hiện tại
+          const actualIndicatedSegment = theWheel.getIndicatedSegment();
+          const actualPrize = actualIndicatedSegment.text;
+          
+          console.log('✅ Wheel stopped! Final angle:', theWheel.rotationAngle.toFixed(2), '| Prize:', actualPrize, '| Expected:', selectedPrizeText, '| Match:', actualPrize === selectedPrizeText ? '✅' : '❌');
+          
+          wheelSpinning = false;
 
               $(".nutbatdau").css("background-image", "url(img/contro.png)"); // Hiển thị lại nút Quay
               document.getElementById("xuatluotquay").innerHTML = dem; // ✅ Hiển thị SỐ LẦN ĐÃ QUAY
@@ -484,16 +480,14 @@
               document.getElementById("annhantien").style.display = ""; // Hiển thị nút nhận tiền
               document.getElementById("xuatsotien").src = "img/" + actualPrize.replace(".000 VNĐ", "") + "k.jpg";
               
-              // Hiển thị popup nhanh với timer ngắn
-              swal({
-                  title: "Tết ấm no!",
-                  text: "Bạn nhận được " + actualPrize,
-                  type: "success",
-                  timer: 1500,
-                  showConfirmButton: true
-              });
-              
-          }, 200); // Delay 200ms cho smooth transition
+          // Hiển thị popup nhanh với timer ngắn
+          swal({
+              title: "Tết ấm no!",
+              text: "Bạn nhận được " + actualPrize,
+              type: "success",
+              timer: 1500,
+              showConfirmButton: true
+          });
       }
 
       // -------------------------------------------------------
