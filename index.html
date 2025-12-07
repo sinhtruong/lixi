@@ -2,9 +2,11 @@
 <html>
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
       <meta name="apple-mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+      <meta name="mobile-web-app-capable" content="yes">
+      <meta name="format-detection" content="telephone=no">
       <title>Vòng quay lì xì</title>
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Francois+One&amp;display=swap'>
       <link rel='stylesheet' href='css/sweetalert.css'>
@@ -13,6 +15,13 @@
       <script type="text/javascript" src="js/Winwheel.min.js"></script>
       <script src='js/sweetalert-dev.js'></script>
       <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+      <style>
+         /* Tối ưu thêm cho canvas trên iOS */
+         #canvas {
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+         }
+      </style>
    </head>
 <div class="pyro">
   <div class="before" style="z-index: 9999"></div>
@@ -52,10 +61,10 @@
       </div>
 
       <div class="vongquay">
-         <canvas id="canvas" width="450" height="450" data-responsiveMinWidth="180" data-responsiveScaleHeight="true" data-responsiveMargin="50">
+         <canvas id="canvas" width="450" height="450" data-responsiveMinWidth="180" data-responsiveScaleHeight="true" data-responsiveMargin="50" style="touch-action: none;">
          </canvas>
          <div id="batdauquay" class="nutbatdau"></div>
-         <div onClick="startSpin();" class="nutquay"></div>
+         <div onClick="startSpin();" class="nutquay" style="touch-action: manipulation;"></div>
       </div>
 
       <img class="responsive2" style="position:fixed;z-index:99;top:0px;right:0px" src="img/hea1.png"/>
@@ -144,6 +153,9 @@
           $("#popuptien").attr("src",'img/popupnhantien.png');
         }
       );
+      // Tối ưu GSAP cho iOS - Tắt lag smoothing để animation mượt hơn
+      gsap.ticker.lagSmoothing(0);
+      
       let theWheel = new Winwheel({
           'outerRadius': 220, // Bán kính ngoài
           'innerRadius': 0, // Size lỗ trung tâm
@@ -192,12 +204,12 @@
           'animation': // Chỉ định hình động để sử dụng.
           {
               'type': 'spinToStop',
-              'duration': 5, // Thời lượng tính bằng giây (giảm để mượt hơn).
-              'spins': 8, // Số vòng quay hoàn chỉnh mặc định (giảm để tối ưu).
+              'duration': 4, // Giảm duration xuống 4s cho mượt hơn trên mobile
+              'spins': 6, // Giảm số vòng quay cho mobile
               'callbackFinished': alertPrize,
               'callbackSound': playSound, // Chức năng gọi khi âm thanh đánh dấu được kích hoạt.
               'soundTrigger': 'pin', // Chỉ định các chân là để kích hoạt âm thanh, tùy chọn khác là 'phân đoạn'.
-              'easing': 'Power4.easeOut', // Thêm easing mượt hơn cho GSAP 3
+              'easing': 'power3.out', // Sử dụng power3 thay vì power4 cho mượt hơn trên mobile
           },
           'pins': {
               'number': 6, // Số lượng chân. Họ không gian đều xung quanh bánh xe.
@@ -206,6 +218,15 @@
               'outerRadius': 4,
           }
       });
+
+      // Tối ưu canvas context cho iOS
+      const canvas = document.getElementById('canvas');
+      if (canvas && canvas.getContext) {
+          const ctx = canvas.getContext('2d', { 
+              alpha: false, // Tắt alpha channel nếu không cần
+              desynchronized: true // Tối ưu rendering trên iOS
+          });
+      }
 
       // Vars được sử dụng bởi mã trong trang này để thực hiện các điều khiển nguồn.
       let wheelPower = 8;
@@ -223,14 +244,26 @@
       var votay = document.getElementById("votay");
       var matluot = document.getElementById("matluot");
       var dangquay = document.getElementById("dangquay");
+      
+      // Phát hiện mobile để tối ưu âm thanh
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       function playSound() {
+          // Trên mobile, giảm tần suất phát âm thanh tick để tránh lag
+          if (isMobileDevice) {
+              // Chỉ phát âm thanh tick mỗi 2 lần để giảm tải
+              if (Math.random() > 0.5) return;
+          }
+          
           // Dừng và tua lại âm thanh nếu nó đã phát.
           audio.pause();
           audio.currentTime = 0;
 
           // Phát âm thanh.
-          audio.play();
+          audio.play().catch(e => {
+              // Bỏ qua lỗi nếu không thể phát âm thanh
+              console.log('Audio play failed:', e);
+          });
       }
 
       // -------------------------------------------------------
@@ -246,9 +279,18 @@
       function startSpin() {
           // Nút quay không nhấp được khi đang chạy
           if (wheelSpinning == false) {
-              // Dựa trên mức công suất được chọn, hãy điều chỉnh số vòng quay cho bánh xe, càng nhiều lần
-              // để xoay với thời lượng của hình ảnh động thì bánh xe quay càng nhanh.
-              theWheel.animation.spins = wheelPower;
+              // Phát hiện mobile để giảm số vòng quay cho mượt hơn
+              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              
+              // Dựa trên mức công suất được chọn, hãy điều chỉnh số vòng quay cho bánh xe
+              if (isMobile) {
+                  // Trên mobile: giảm số vòng quay xuống để mượt hơn
+                  theWheel.animation.spins = Math.min(wheelPower * 0.7, 6);
+                  theWheel.animation.duration = 3.5; // Giảm thời gian cho mobile
+              } else {
+                  theWheel.animation.spins = wheelPower;
+                  theWheel.animation.duration = 4;
+              }
 
               // Tắt nút xoay để không thể nhấp lại trong khi bánh xe đang quay.
               // $(".nutbatdau").css("background-image", "url(img/controtat.png)");
